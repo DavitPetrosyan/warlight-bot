@@ -70,7 +70,7 @@ public class BotState {
 					superRegionId = Integer.parseInt(mapInput[i]);
 					i++;
 					reward = Integer.parseInt(mapInput[i]);
-					fullMap.add(new SuperRegion(superRegionId, reward));
+					fullMap.add(new SuperRegion(superRegionId, reward, false));
 				}
 				catch(Exception e) {
 					System.err.println("Unable to parse SuperRegions");
@@ -112,11 +112,29 @@ public class BotState {
 				}
 			}
 		}
+		else if(mapInput[1].equals("wastelands"))
+		{
+			for(i=2; i<mapInput.length; i++)
+			{
+				try {
+					regionId = Integer.parseInt(mapInput[i]);
+					i++;
+					Region region = fullMap.getRegion(regionId);
+					region.setWasteLand(true);
+					region.getSuperRegion().setBadRegion(true);
+
+				}
+				catch(Exception e) {
+					System.err.println("Unable to parse wastelands " + e.getMessage());
+				}
+			}
+		}
 	}
 	
 	//regions from wich a player is able to pick his preferred starting regions
 	public void setPickableStartingRegions(String[] mapInput)
 	{
+		pickableStartingRegions = new ArrayList<Region>();
 		for(int i=2; i<mapInput.length; i++)
 		{
 			int regionId;

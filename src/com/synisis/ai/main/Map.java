@@ -66,12 +66,12 @@ public class Map {
 		Map newMap = new Map();
 		for(SuperRegion sr : superRegions) //copy superRegions
 		{
-			SuperRegion newSuperRegion = new SuperRegion(sr.getId(), sr.getArmiesReward());
+			SuperRegion newSuperRegion = new SuperRegion(sr.getId(), sr.getArmiesReward(), sr.isBadRegion());
 			newMap.add(newSuperRegion);
 		}
 		for(Region r : regions) //copy regions
 		{
-			Region newRegion = new Region(r.getId(), newMap.getSuperRegion(r.getSuperRegion().getId()), r.getPlayerName(), r.getArmies());
+			Region newRegion = new Region(r.getId(), newMap.getSuperRegion(r.getSuperRegion().getId()), r.getPlayerName(), r.getArmies(), r.isWasteLand());
 			newMap.add(newRegion);
 		}
 		for(Region r : regions) //add neighbors to copied regions

@@ -24,11 +24,10 @@ import com.synisis.ai.main.Region;
 import com.synisis.ai.move.AttackTransferMove;
 import com.synisis.ai.move.PlaceArmiesMove;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 
 
-public class BotStarter implements Bot 
+public class BotStarter implements Bot
 {
 	@Override
 	/**
@@ -36,30 +35,36 @@ public class BotStarter implements Bot
 	 * This example randomly picks 6 regions from the pickable starting Regions given by the engine.
 	 * @return : a list of m (m=6) Regions starting with the most preferred Region and ending with the least preferred Region to start with 
 	 */
-	public ArrayList<Region> getPreferredStartingRegions(BotState state, Long timeOut)
+	public Region getPreferredStartingRegions(BotState state, Long timeOut)
 	{
-		int m = 6;
-		ArrayList<Region> preferredStartingRegions = new ArrayList<Region>();
-		for(int i=0; i<m; i++) {
-			//TODO
-			//implement pickingalgorithm
+		ArrayList<Region> pickableStartingRegions = state.getPickableStartingRegions();
+		pickableStartingRegions.sort(Region.COMPARE_BY_SUPERREGION_SIZE);
+		if(pickableStartingRegions.size() > 1) {
+			int firstRegionSize = pickableStartingRegions.get(0).getSuperRegion().getSubRegions().size();
+			int secondRegionSize = pickableStartingRegions.get(1).getSuperRegion().getSubRegions().size();
+			if (firstRegionSize == secondRegionSize) {
+				ArrayList<Region> pickableStartingRegionsForNewCriteria = new ArrayList<>();
 
-			if (state.getPickableStartingRegions().size() - 1 > i){
-				preferredStartingRegions.add(state.getPickableStartingRegions().get(i));
+				pickableStartingRegionsForNewCriteria.add(pickableStartingRegions.get(0));
+				pickableStartingRegionsForNewCriteria.add(pickableStartingRegions.get(1));
+				if(pickableStartingRegions.size() > 2 &&
+						secondRegionSize == pickableStartingRegions.get(2).getSuperRegion().getSubRegions().size()){
+					pickableStartingRegionsForNewCriteria.add(pickableStartingRegions.get(2));
+				}
+
+				pickableStartingRegionsForNewCriteria.sort(Region.COMPARE_BY_NOT_BAD_REGIONS);
+
+				if(pickableStartingRegionsForNewCriteria.get(0).getSuperRegion().isBadRegion() == pickableStartingRegionsForNewCriteria.get(1).getSuperRegion().isBadRegion()) {
+					pickableStartingRegionsForNewCriteria.sort(Region.COMPARE_BY_NEIGHBORS_INSIDE_SUPER_REGION);
+					return pickableStartingRegionsForNewCriteria.get(0);
+				} else {
+					return pickableStartingRegionsForNewCriteria.get(0);
+				}
+			} else {
+				return pickableStartingRegions.get(0);
 			}
-
-//			double rand = Math.random();
-//			int r = (int) (rand*state.getPickableStartingRegions().size());
-//			int regionId = state.getPickableStartingRegions().get(r).getId();
-//			Region region = state.getFullMap().getRegion(regionId);
-//
-//			if(!preferredStartingRegions.contains(region))
-//				preferredStartingRegions.add(region);
-//			else
-//				i--;
 		}
-		
-		return preferredStartingRegions;
+		return pickableStartingRegions.get(0);
 	}
 
 	@Override
@@ -110,7 +115,7 @@ public class BotStarter implements Bot
 		ArrayList<AttackTransferMove> attackTransferMoves = new ArrayList<AttackTransferMove>();
 		String myName = state.getMyPlayerName();
 		int armies = 5;
-		state.getStartingArmies()
+//		state.getStartingArmies();
 		for(Region fromRegion : state.getVisibleMap().getRegions())
 		{
 			if(fromRegion.ownedByPlayer(myName)) //do an attack

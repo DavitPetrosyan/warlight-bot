@@ -40,15 +40,11 @@ public class BotParser {
 			String line = scan.nextLine().trim();
 			if(line.length() == 0) { continue; }
 			String[] parts = line.split(" ");
-			if(parts[0].equals("pick_starting_regions")) {
+			if(parts[0].equals("pick_starting_region")) {
 				//pick which regions you want to start with
 				currentState.setPickableStartingRegions(parts);
-				ArrayList<Region> preferredStartingRegions = bot.getPreferredStartingRegions(currentState, Long.valueOf(parts[1]));
-				String output = "";
-				for(Region region : preferredStartingRegions)
-					output = output.concat(region.getId() + " ");
-				
-				System.out.println(output);
+				Region preferredStartingRegions = bot.getPreferredStartingRegions(currentState, Long.valueOf(parts[1]));
+				System.out.println(preferredStartingRegions.getId());
 			} else if(parts.length == 3 && parts[0].equals("go")) {
 				//we need to do a move
 				String output = "";

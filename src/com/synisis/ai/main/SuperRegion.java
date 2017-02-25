@@ -9,18 +9,21 @@
  */
 
 package com.synisis.ai.main;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class SuperRegion {
 	
 	private int id;
 	private int armiesReward;
+	private boolean isBadRegion;
 	private LinkedList<Region> subRegions;
 	
-	public SuperRegion(int id, int armiesReward)
+	public SuperRegion(int id, int armiesReward, boolean isBadRegion)
 	{
 		this.id = id;
 		this.armiesReward = armiesReward;
+		this.isBadRegion = isBadRegion;
 		subRegions = new LinkedList<Region>();
 	}
 	
@@ -57,7 +60,15 @@ public class SuperRegion {
 	public int getArmiesReward() {
 		return armiesReward;
 	}
-	
+
+	public boolean isBadRegion() {
+		return isBadRegion;
+	}
+
+	public void setBadRegion(boolean badRegion) {
+		isBadRegion = badRegion;
+	}
+
 	/**
 	 * @return A list with the Regions that are part of this SuperRegion
 	 */

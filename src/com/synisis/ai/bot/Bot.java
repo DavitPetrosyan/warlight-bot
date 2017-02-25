@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public interface Bot {
 	
-	public ArrayList<Region> getPreferredStartingRegions(BotState state, Long timeOut);
+	public Region getPreferredStartingRegions(BotState state, Long timeOut);
 	
 	public ArrayList<PlaceArmiesMove> getPlaceArmiesMoves(BotState state, Long timeOut);
 	
